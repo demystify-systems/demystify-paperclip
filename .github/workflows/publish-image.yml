@@ -1,0 +1,102 @@
+# Build and publish this fork's runtime image to GHCR.
+#
+# WHY THIS EXISTS: docker-compose.base.yml in demystipai has pinned an image
+# from this repo since ADR-006 — and this repo had never run a single
+# image-publishing workflow, so the pin resolved to nothing and the pod's
+# `core` profile could not start. Nobody noticed because reading a compose file
+# looks fine; only resolving the pin fails. (demystipai now has
+# scripts/check-image-pins.mjs, which resolves every pin in CI.)
+#
+# BUILDS A RELEASE TAG, NOT HEAD. The fork's default branch tracks upstream's
+# unreleased main — 4,595 commits past the last openclaw release, 183 past the
+# last paperclip one at the time of writing. Shipping that to a customer pod
+# means shipping code upstream has not released. A product that sells an
+# auditable record does not get to be casual about what is in its own
+# containers, so `ref` defaults to a release tag and the image is tagged with
+# the version that tag names.
+#
+# The fork carries ZERO commits of our own (verified: ahead_by 0). It exists as
+# a supply-chain boundary — a known, pinned state — not to hold patches.
+name: publish-image
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref to build (a RELEASE TAG, e.g. v2026.7.1 — not a branch)'
+        required: true
+        type: string
+      version:
+        description: 'Image tag (default: the ref with any leading v stripped)'
+        required: false
+        type: string
+      latest:
+        description: 'Also push :latest'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  REGISTRY: ghcr.io
+  OWNER: demystify-systems
+  IMAGE: paperclip
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Build exactly the requested ref. No fuzzy "latest tag" resolution:
+          # what we ship must be a thing someone named on purpose.
+          ref: ${{ inputs.ref }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve version
+        id: v
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            v="${{ inputs.version }}"
+          else
+            v="${{ inputs.ref }}"; v="${v#v}"
+          fi
+          echo "value=$v" >> "$GITHUB_OUTPUT"
+          echo "Building ref ${{ inputs.ref }} as ${{ env.IMAGE }}:$v"
+
+      - name: Refuse to overwrite an existing version tag
+        run: |
+          img="${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE }}"
+          tag="${{ steps.v.outputs.value }}"
+          if docker manifest inspect "${img}:${tag}" > /dev/null 2>&1; then
+            echo "::error::${img}:${tag} already exists. A version must mean one thing forever — pick a new one rather than making every existing pin a liar."
+            exit 1
+          fi
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE }}:${{ steps.v.outputs.value }}
+            ${{ inputs.latest && format('{0}/{1}/{2}:latest', env.REGISTRY, env.OWNER, env.IMAGE) || '' }}
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Report
+        run: |
+          echo "Published ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ env.IMAGE }}:${{ steps.v.outputs.value }} from ${{ inputs.ref }}"
+          echo "GHCR packages start PRIVATE. Pods authenticate with GHCR_PULL_TOKEN (read:packages);"
+          echo "local dev needs: docker login ghcr.io"
