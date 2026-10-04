@@ -14,7 +14,7 @@ DO $$ BEGIN
   ) THEN
     ALTER TABLE "tool_oauth_states"
       ADD CONSTRAINT "tool_oauth_states_company_id_companies_id_fk"
-      FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id")
+      FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id")
       ON DELETE cascade ON UPDATE no action;
   END IF;
 END $$;
@@ -26,7 +26,7 @@ DO $$ BEGIN
   ) THEN
     ALTER TABLE "tool_oauth_states"
       ADD CONSTRAINT "tool_oauth_states_connection_id_tool_connections_id_fk"
-      FOREIGN KEY ("connection_id") REFERENCES "public"."tool_connections"("id")
+      FOREIGN KEY ("connection_id") REFERENCES "paperclip"."tool_connections"("id")
       ON DELETE cascade ON UPDATE no action;
   END IF;
 END $$;

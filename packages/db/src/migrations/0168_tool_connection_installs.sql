@@ -18,7 +18,7 @@ BEGIN
   ) THEN
     ALTER TABLE "tool_connection_installs"
       ADD CONSTRAINT "tool_connection_installs_company_id_companies_id_fk"
-      FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id")
+      FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id")
       ON DELETE cascade ON UPDATE no action;
   END IF;
 END $$;
@@ -31,7 +31,7 @@ BEGIN
   ) THEN
     ALTER TABLE "tool_connection_installs"
       ADD CONSTRAINT "tool_connection_installs_connection_id_tool_connections_id_fk"
-      FOREIGN KEY ("connection_id") REFERENCES "public"."tool_connections"("id")
+      FOREIGN KEY ("connection_id") REFERENCES "paperclip"."tool_connections"("id")
       ON DELETE cascade ON UPDATE no action;
   END IF;
 END $$;
@@ -44,7 +44,7 @@ BEGIN
   ) THEN
     ALTER TABLE "tool_connection_installs"
       ADD CONSTRAINT "tool_connection_installs_created_by_agent_id_agents_id_fk"
-      FOREIGN KEY ("created_by_agent_id") REFERENCES "public"."agents"("id")
+      FOREIGN KEY ("created_by_agent_id") REFERENCES "paperclip"."agents"("id")
       ON DELETE set null ON UPDATE no action;
   END IF;
 END $$;

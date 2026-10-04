@@ -1,0 +1,72 @@
+name: dmstfy-schema-check
+
+# Proves Paperclip runs inside its own schema of a shared database, as an unprivileged role.
+# See DMSTFY-PATCHES.md.
+on:
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:
+
+concurrency:
+  group: dmstfy-schema-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      PGHOST: localhost
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Patch is applied (fails when an upstream merge brings back "public".)
+        run: |
+          node scripts/dmstfy-schema-patch.mjs --selftest
+          node scripts/dmstfy-schema-patch.mjs --check
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 9.15.4
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install
+        run: pnpm install --frozen-lockfile --filter @paperclipai/db...
+
+      - name: Owner setup (schemas, extensions, unprivileged role)
+        run: psql -U postgres -v ON_ERROR_STOP=1 -f scripts/dmstfy-schema-setup.sql
+
+      - name: Run Paperclip's own migrator as the unprivileged role
+        working-directory: packages/db
+        env:
+          DATABASE_URL: postgres://paperclip_app:paperclip_app@localhost:5432/postgres
+        run: pnpm exec tsx ../../scripts/dmstfy-schema-verify.ts
+
+      - name: Every migration applied, every table in paperclip, none in public
+        run: |
+          expected=$(node -e 'console.log(require("./packages/db/src/migrations/meta/_journal.json").entries.length)')
+          applied=$(psql -U postgres -Atc 'select count(*) from paperclip.__drizzle_migrations')
+          in_schema=$(psql -U postgres -Atc "select count(*) from information_schema.tables where table_schema='paperclip' and table_type='BASE TABLE' and table_name <> '__drizzle_migrations'")
+          elsewhere=$(psql -U postgres -Atc "select count(*) from information_schema.tables where table_type='BASE TABLE' and table_schema not in ('paperclip','pg_catalog','information_schema')")
+          echo "migrations expected=$expected applied=$applied; tables in paperclip=$in_schema; tables elsewhere=$elsewhere"
+          test "$applied" = "$expected"
+          test "$in_schema" -gt 100
+          test "$elsewhere" = "0"

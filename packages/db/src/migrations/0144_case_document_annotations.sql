@@ -3,13 +3,13 @@ ALTER TABLE "document_annotation_threads" ADD COLUMN IF NOT EXISTS "case_id" uui
 ALTER TABLE "document_annotation_comments" ADD COLUMN IF NOT EXISTS "case_id" uuid;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "document_annotation_threads" ADD CONSTRAINT "document_annotation_threads_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "public"."cases"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "document_annotation_threads" ADD CONSTRAINT "document_annotation_threads_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "paperclip"."cases"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "document_annotation_comments" ADD CONSTRAINT "document_annotation_comments_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "public"."cases"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "document_annotation_comments" ADD CONSTRAINT "document_annotation_comments_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "paperclip"."cases"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;

@@ -154,7 +154,7 @@ SET
 ALTER TABLE "instance_settings"
   ADD CONSTRAINT "instance_settings_default_environment_id_environments_id_fk"
   FOREIGN KEY ("default_environment_id")
-  REFERENCES "public"."environments"("id")
+  REFERENCES "paperclip"."environments"("id")
   ON DELETE set null
   ON UPDATE no action;
 --> statement-breakpoint

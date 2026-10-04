@@ -14,5 +14,5 @@ DO $$ BEGIN
   IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_connections_application_id_tool_applications_id_fk') THEN
     ALTER TABLE "tool_connections" DROP CONSTRAINT "tool_connections_application_id_tool_applications_id_fk";
   END IF;
-  ALTER TABLE "tool_connections" ADD CONSTRAINT "tool_connections_application_id_tool_applications_id_fk" FOREIGN KEY ("application_id") REFERENCES "public"."tool_applications"("id") ON DELETE no action ON UPDATE no action;
+  ALTER TABLE "tool_connections" ADD CONSTRAINT "tool_connections_application_id_tool_applications_id_fk" FOREIGN KEY ("application_id") REFERENCES "paperclip"."tool_applications"("id") ON DELETE no action ON UPDATE no action;
 END $$;

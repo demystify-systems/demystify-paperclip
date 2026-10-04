@@ -44,70 +44,70 @@ CREATE TABLE "environment_custom_image_setup_sessions" (
 ALTER TABLE "environment_custom_image_templates"
   ADD CONSTRAINT "environment_custom_image_templates_company_id_companies_id_fk"
   FOREIGN KEY ("company_id")
-  REFERENCES "public"."companies"("id")
+  REFERENCES "paperclip"."companies"("id")
   ON DELETE cascade
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_templates"
   ADD CONSTRAINT "environment_custom_image_templates_environment_id_environments_id_fk"
   FOREIGN KEY ("environment_id")
-  REFERENCES "public"."environments"("id")
+  REFERENCES "paperclip"."environments"("id")
   ON DELETE cascade
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_templates"
   ADD CONSTRAINT "environment_custom_image_templates_created_by_agent_id_agents_id_fk"
   FOREIGN KEY ("created_by_agent_id")
-  REFERENCES "public"."agents"("id")
+  REFERENCES "paperclip"."agents"("id")
   ON DELETE set null
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_templates"
   ADD CONSTRAINT "environment_custom_image_templates_superseded_by_template_id_fk"
   FOREIGN KEY ("superseded_by_template_id")
-  REFERENCES "public"."environment_custom_image_templates"("id")
+  REFERENCES "paperclip"."environment_custom_image_templates"("id")
   ON DELETE set null
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_setup_sessions"
   ADD CONSTRAINT "environment_custom_image_setup_sessions_company_id_companies_id_fk"
   FOREIGN KEY ("company_id")
-  REFERENCES "public"."companies"("id")
+  REFERENCES "paperclip"."companies"("id")
   ON DELETE cascade
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_setup_sessions"
   ADD CONSTRAINT "environment_custom_image_setup_sessions_environment_id_environments_id_fk"
   FOREIGN KEY ("environment_id")
-  REFERENCES "public"."environments"("id")
+  REFERENCES "paperclip"."environments"("id")
   ON DELETE cascade
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_setup_sessions"
   ADD CONSTRAINT "environment_custom_image_setup_sessions_template_id_fk"
   FOREIGN KEY ("template_id")
-  REFERENCES "public"."environment_custom_image_templates"("id")
+  REFERENCES "paperclip"."environment_custom_image_templates"("id")
   ON DELETE set null
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_setup_sessions"
   ADD CONSTRAINT "environment_custom_image_setup_sessions_promoted_template_id_fk"
   FOREIGN KEY ("promoted_template_id")
-  REFERENCES "public"."environment_custom_image_templates"("id")
+  REFERENCES "paperclip"."environment_custom_image_templates"("id")
   ON DELETE set null
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_setup_sessions"
   ADD CONSTRAINT "environment_custom_image_setup_sessions_environment_lease_id_environment_leases_id_fk"
   FOREIGN KEY ("environment_lease_id")
-  REFERENCES "public"."environment_leases"("id")
+  REFERENCES "paperclip"."environment_leases"("id")
   ON DELETE set null
   ON UPDATE no action;
 --> statement-breakpoint
 ALTER TABLE "environment_custom_image_setup_sessions"
   ADD CONSTRAINT "environment_custom_image_setup_sessions_started_by_agent_id_agents_id_fk"
   FOREIGN KEY ("started_by_agent_id")
-  REFERENCES "public"."agents"("id")
+  REFERENCES "paperclip"."agents"("id")
   ON DELETE set null
   ON UPDATE no action;
 --> statement-breakpoint

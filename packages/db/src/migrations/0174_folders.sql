@@ -17,7 +17,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'folders_company_id_companies_id_fk'
 	) THEN
-		ALTER TABLE "folders" ADD CONSTRAINT "folders_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "folders" ADD CONSTRAINT "folders_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
@@ -25,7 +25,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'company_skills_folder_id_folders_id_fk'
 	) THEN
-		ALTER TABLE "company_skills" ADD CONSTRAINT "company_skills_folder_id_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."folders"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "company_skills" ADD CONSTRAINT "company_skills_folder_id_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "paperclip"."folders"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
@@ -33,7 +33,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'routines_folder_id_folders_id_fk'
 	) THEN
-		ALTER TABLE "routines" ADD CONSTRAINT "routines_folder_id_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "public"."folders"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "routines" ADD CONSTRAINT "routines_folder_id_folders_id_fk" FOREIGN KEY ("folder_id") REFERENCES "paperclip"."folders"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint

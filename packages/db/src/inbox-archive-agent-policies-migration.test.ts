@@ -57,7 +57,7 @@ describeEmbeddedPostgres("inbox archive agent policy migration", () => {
 
       try {
         const hash = await migrationHash();
-        await sql`DELETE FROM "drizzle"."__drizzle_migrations" WHERE "hash" = ${hash}`;
+        await sql`DELETE FROM "paperclip"."__drizzle_migrations" WHERE "hash" = ${hash}`;
         await sql`DROP TABLE IF EXISTS "user_inbox_agent_policies"`;
         await sql`ALTER TABLE "issue_inbox_archives" DROP CONSTRAINT IF EXISTS "issue_inbox_archives_archived_by_agent_id_agents_id_fk"`;
         await sql`ALTER TABLE "issue_inbox_archives" DROP CONSTRAINT IF EXISTS "issue_inbox_archives_archived_by_run_id_heartbeat_runs_id_fk"`;
