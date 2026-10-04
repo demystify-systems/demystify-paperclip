@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
 import { drizzle as drizzlePg } from "drizzle-orm/postgres-js";
-import { migrate as migratePg } from "drizzle-orm/postgres-js/migrator";
 import { readFile, readdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import postgres from "postgres";
@@ -8,10 +7,47 @@ import * as schema from "./schema/index.js";
 
 const MIGRATIONS_FOLDER = fileURLToPath(new URL("./migrations", import.meta.url));
 const DRIZZLE_MIGRATIONS_TABLE = "__drizzle_migrations";
+const PAPERCLIP_DB_SCHEMA = "paperclip"; // dmstfy-schema-patch: every Paperclip object lives here
+const PAPERCLIP_EXTENSIONS_SCHEMA = "extensions";
+// Role-level search_path wins when set; PAPERCLIP_DB_SEARCH_PATH="" turns the connection option off.
+const PAPERCLIP_SEARCH_PATH =
+  process.env.PAPERCLIP_DB_SEARCH_PATH ?? `${PAPERCLIP_DB_SCHEMA},${PAPERCLIP_EXTENSIONS_SCHEMA}`;
+const PAPERCLIP_PG_OPTIONS = PAPERCLIP_SEARCH_PATH
+  ? { connection: { search_path: PAPERCLIP_SEARCH_PATH } }
+  : {};
+
+// Embedded and superuser setups get the schema (and the extensions) created; an unprivileged role
+// expects the owner to have made them, and the migrations that need them say so if they are missing.
+async function ensureDbSchema(sql: ReturnType<typeof postgres>): Promise<void> {
+  const exists = async (name: string) =>
+    (await sql<{ one: number }[]>`select 1 as one from pg_namespace where nspname = ${name}`).length > 0;
+  if (!(await exists(PAPERCLIP_DB_SCHEMA))) {
+    await sql.unsafe(`CREATE SCHEMA ${quoteIdentifier(PAPERCLIP_DB_SCHEMA)}`);
+  }
+  if (!(await exists(PAPERCLIP_EXTENSIONS_SCHEMA))) {
+    try {
+      await sql.unsafe(`CREATE SCHEMA ${quoteIdentifier(PAPERCLIP_EXTENSIONS_SCHEMA)}`);
+    } catch {
+      return;
+    }
+  }
+  for (const extension of ["pg_trgm", "fuzzystrmatch"]) {
+    const present = await sql<{ one: number }[]>`
+      select 1 as one from pg_extension e join pg_namespace n on n.oid = e.extnamespace
+      where e.extname = ${extension} and n.nspname = ${PAPERCLIP_EXTENSIONS_SCHEMA}
+    `;
+    if (present.length > 0) continue;
+    try {
+      await sql.unsafe(`CREATE EXTENSION IF NOT EXISTS ${extension} SCHEMA ${quoteIdentifier(PAPERCLIP_EXTENSIONS_SCHEMA)}`);
+    } catch {
+      // not allowed for this role: the owner creates it; the migration reports it clearly
+    }
+  }
+}
 const MIGRATIONS_JOURNAL_JSON = fileURLToPath(new URL("./migrations/meta/_journal.json", import.meta.url));
 
 function createUtilitySql(url: string) {
-  return postgres(url, { max: 1, onnotice: () => {} });
+  return postgres(url, { max: 1, onnotice: () => {}, ...PAPERCLIP_PG_OPTIONS });
 }
 
 function isSafeIdentifier(value: string): boolean {
@@ -46,7 +82,7 @@ export type MigrationState =
     };
 
 export function createDb(url: string) {
-  const sql = postgres(url);
+  const sql = postgres(url, PAPERCLIP_PG_OPTIONS);
   return drizzlePg(sql, { schema });
 }
 
@@ -164,13 +200,13 @@ async function ensureMigrationJournalTable(
 ): Promise<{ migrationTableSchema: string; columnNames: Set<string> }> {
   let migrationTableSchema = await discoverMigrationTableSchema(sql);
   if (!migrationTableSchema) {
-    const drizzleSchema = quoteIdentifier("drizzle");
+    const drizzleSchema = quoteIdentifier(PAPERCLIP_DB_SCHEMA);
     const migrationTable = quoteIdentifier(DRIZZLE_MIGRATIONS_TABLE);
-    await sql.unsafe(`CREATE SCHEMA IF NOT EXISTS ${drizzleSchema}`);
+    await ensureDbSchema(sql);
     await sql.unsafe(
       `CREATE TABLE IF NOT EXISTS ${drizzleSchema}.${migrationTable} (id SERIAL PRIMARY KEY, hash text NOT NULL, created_at bigint)`,
     );
-    migrationTableSchema = (await discoverMigrationTableSchema(sql)) ?? "drizzle";
+    migrationTableSchema = (await discoverMigrationTableSchema(sql)) ?? PAPERCLIP_DB_SCHEMA;
   }
 
   const columnNames = await getMigrationTableColumnNames(sql, migrationTableSchema);
@@ -316,7 +352,7 @@ async function tableExists(
     SELECT EXISTS (
       SELECT 1
       FROM information_schema.tables
-      WHERE table_schema = 'public'
+      WHERE table_schema = ${PAPERCLIP_DB_SCHEMA}
         AND table_name = ${tableName}
     ) AS exists
   `;
@@ -332,7 +368,7 @@ async function columnExists(
     SELECT EXISTS (
       SELECT 1
       FROM information_schema.columns
-      WHERE table_schema = 'public'
+      WHERE table_schema = ${PAPERCLIP_DB_SCHEMA}
         AND table_name = ${tableName}
         AND column_name = ${columnName}
     ) AS exists
@@ -349,7 +385,7 @@ async function indexExists(
       SELECT 1
       FROM pg_class c
       JOIN pg_namespace n ON n.oid = c.relnamespace
-      WHERE n.nspname = 'public'
+      WHERE n.nspname = ${PAPERCLIP_DB_SCHEMA}
         AND c.relkind = 'i'
         AND c.relname = ${indexName}
     ) AS exists
@@ -366,7 +402,7 @@ async function constraintExists(
       SELECT 1
       FROM pg_constraint c
       JOIN pg_namespace n ON n.oid = c.connamespace
-      WHERE n.nspname = 'public'
+      WHERE n.nspname = ${PAPERCLIP_DB_SCHEMA}
         AND c.conname = ${constraintName}
     ) AS exists
   `;
@@ -583,16 +619,10 @@ async function discoverMigrationTableSchema(sql: ReturnType<typeof postgres>): P
     SELECT n.nspname AS "schemaName"
     FROM pg_class c
     JOIN pg_namespace n ON n.oid = c.relnamespace
-    WHERE c.relname = ${DRIZZLE_MIGRATIONS_TABLE} AND c.relkind = 'r'
+    WHERE c.relname = ${DRIZZLE_MIGRATIONS_TABLE} AND c.relkind = 'r' AND n.nspname = ${PAPERCLIP_DB_SCHEMA}
   `;
 
   if (rows.length === 0) return null;
-
-  const drizzleSchema = rows.find(({ schemaName }) => schemaName === "drizzle");
-  if (drizzleSchema) return drizzleSchema.schemaName;
-
-  const publicSchema = rows.find(({ schemaName }) => schemaName === "public");
-  if (publicSchema) return publicSchema.schemaName;
 
   return rows[0]?.schemaName ?? null;
 }
@@ -605,7 +635,7 @@ export async function inspectMigrations(url: string): Promise<MigrationState> {
     const tableCountResult = await sql<{ count: number }[]>`
       select count(*)::int as count
       from information_schema.tables
-      where table_schema = 'public'
+      where table_schema = ${PAPERCLIP_DB_SCHEMA}
         and table_type = 'BASE TABLE'
     `;
     const tableCount = tableCountResult[0]?.count ?? 0;
@@ -664,8 +694,7 @@ export async function applyPendingMigrations(url: string): Promise<void> {
   if (initialState.reason === "no-migration-journal-empty-db") {
     const sql = createUtilitySql(url);
     try {
-      const db = drizzlePg(sql);
-      await migratePg(db, { migrationsFolder: MIGRATIONS_FOLDER });
+      await applyPendingMigrationsManually(url, await listMigrationFiles());
     } finally {
       await sql.end();
     }
@@ -731,7 +760,7 @@ export async function migratePostgresIfEmpty(url: string): Promise<MigrationBoot
     const tableCountResult = await sql<{ count: number }[]>`
       select count(*)::int as count
       from information_schema.tables
-      where table_schema = 'public'
+      where table_schema = ${PAPERCLIP_DB_SCHEMA}
         and table_type = 'BASE TABLE'
     `;
 
@@ -745,8 +774,7 @@ export async function migratePostgresIfEmpty(url: string): Promise<MigrationBoot
       return { migrated: false, reason: "not-empty-no-migration-journal", tableCount };
     }
 
-    const db = drizzlePg(sql);
-    await migratePg(db, { migrationsFolder: MIGRATIONS_FOLDER });
+    await applyPendingMigrationsManually(url, await listMigrationFiles());
 
     return { migrated: true, reason: "migrated-empty-db", tableCount: 0 };
   } finally {

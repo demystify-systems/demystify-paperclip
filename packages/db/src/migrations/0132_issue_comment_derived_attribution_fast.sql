@@ -5,14 +5,14 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'issue_comments_derived_author_agent_id_agents_id_fk'
 	) THEN
-		ALTER TABLE "issue_comments" ADD CONSTRAINT "issue_comments_derived_author_agent_id_agents_id_fk" FOREIGN KEY ("derived_author_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "issue_comments" ADD CONSTRAINT "issue_comments_derived_author_agent_id_agents_id_fk" FOREIGN KEY ("derived_author_agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'issue_comments_derived_created_by_run_id_heartbeat_runs_id_fk'
 	) THEN
-		ALTER TABLE "issue_comments" ADD CONSTRAINT "issue_comments_derived_created_by_run_id_heartbeat_runs_id_fk" FOREIGN KEY ("derived_created_by_run_id") REFERENCES "public"."heartbeat_runs"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "issue_comments" ADD CONSTRAINT "issue_comments_derived_created_by_run_id_heartbeat_runs_id_fk" FOREIGN KEY ("derived_created_by_run_id") REFERENCES "paperclip"."heartbeat_runs"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;--> statement-breakpoint
 -- Temporary support for the forward-only backfill. The keyset loop below

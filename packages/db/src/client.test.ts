@@ -130,7 +130,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
         const richMagnetoHash = await migrationHash("0030_rich_magneto.sql");
 
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${richMagnetoHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${richMagnetoHash}'`,
         );
         await sql.unsafe(`DROP TABLE "company_logos"`);
       } finally {
@@ -155,7 +155,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           `
             SELECT table_name
             FROM information_schema.tables
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name IN ('company_logos', 'execution_workspaces')
             ORDER BY table_name
           `,
@@ -183,14 +183,14 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
         const illegalToadHash = await migrationHash("0044_illegal_toad.sql");
 
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${illegalToadHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${illegalToadHash}'`,
         );
 
         const columns = await sql.unsafe<{ column_name: string }[]>(
           `
             SELECT column_name
             FROM information_schema.columns
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name = 'instance_settings'
               AND column_name = 'general'
           `,
@@ -257,14 +257,14 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
         const smoothSentinelsHash = await migrationHash("0046_smooth_sentinels.sql");
 
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${smoothSentinelsHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${smoothSentinelsHash}'`,
         );
 
         const columns = await sql.unsafe<{ column_name: string; is_nullable: string; column_default: string | null }[]>(
           `
             SELECT column_name, is_nullable, column_default
             FROM information_schema.columns
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name = 'document_revisions'
               AND column_name IN ('title', 'format')
             ORDER BY column_name
@@ -293,7 +293,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           `
             SELECT column_name, is_nullable, column_default
             FROM information_schema.columns
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name = 'document_revisions'
               AND column_name IN ('title', 'format')
             ORDER BY column_name
@@ -329,14 +329,14 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
         const overjoyedGrootHash = await migrationHash("0047_overjoyed_groot.sql");
 
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${overjoyedGrootHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${overjoyedGrootHash}'`,
         );
 
         const tables = await sql.unsafe<{ table_name: string }[]>(
           `
             SELECT table_name
             FROM information_schema.tables
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name IN ('feedback_exports', 'feedback_votes')
             ORDER BY table_name
           `,
@@ -350,7 +350,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           `
             SELECT table_name, column_name
             FROM information_schema.columns
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND (
                 (table_name = 'companies' AND column_name IN (
                   'feedback_data_sharing_enabled',
@@ -423,14 +423,14 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
         const flashyMarrowHash = await migrationHash("0048_flashy_marrow.sql");
 
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${flashyMarrowHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${flashyMarrowHash}'`,
         );
 
         const columns = await sql.unsafe<{ column_name: string }[]>(
           `
             SELECT column_name
             FROM information_schema.columns
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name = 'routines'
               AND column_name = 'variables'
           `,
@@ -458,7 +458,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           `
             SELECT column_name, is_nullable, data_type
             FROM information_schema.columns
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name = 'routines'
               AND column_name = 'variables'
           `,
@@ -489,14 +489,14 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
         const stiffLuckmanHash = await migrationHash("0050_stiff_luckman.sql");
 
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${stiffLuckmanHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${stiffLuckmanHash}'`,
         );
 
         const columns = await sql.unsafe<{ column_name: string }[]>(
           `
             SELECT column_name
             FROM information_schema.columns
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name = 'projects'
               AND column_name = 'env'
           `,
@@ -524,7 +524,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           `
             SELECT column_name, is_nullable, data_type
             FROM information_schema.columns
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name = 'projects'
               AND column_name = 'env'
           `,
@@ -557,14 +557,14 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
         );
 
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${pluginNamespacesHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${pluginNamespacesHash}'`,
         );
 
         const tables = await sql.unsafe<{ table_name: string }[]>(
           `
             SELECT table_name
             FROM information_schema.tables
-            WHERE table_schema = 'public'
+            WHERE table_schema = 'paperclip'
               AND table_name IN ('plugin_database_namespaces', 'plugin_migrations')
             ORDER BY table_name
           `,
@@ -595,7 +595,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           `
             SELECT indexname
             FROM pg_indexes
-            WHERE schemaname = 'public'
+            WHERE schemaname = 'paperclip'
               AND tablename IN ('plugin_database_namespaces', 'plugin_migrations')
             ORDER BY indexname
           `,
@@ -703,7 +703,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           )
         `);
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${runResponsibleUserHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${runResponsibleUserHash}'`,
         );
       } finally {
         await sql.end();
@@ -784,7 +784,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           )
         `);
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${repairSweepHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${repairSweepHash}'`,
         );
       } finally {
         await sql.end();
@@ -1036,7 +1036,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           )
         `);
         await afterCleanReplay.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${repairSweepHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${repairSweepHash}'`,
         );
       } finally {
         await afterCleanReplay.end();
@@ -1123,7 +1123,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
         });
 
         await afterRepair.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${repairSweepHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${repairSweepHash}'`,
         );
       } finally {
         await afterRepair.end();
@@ -1242,7 +1242,7 @@ describeEmbeddedPostgres("applyPendingMigrations", () => {
           )
         `);
         await sql.unsafe(
-          `DELETE FROM "drizzle"."__drizzle_migrations" WHERE hash = '${runResponsibleUserRepairHash}'`,
+          `DELETE FROM "paperclip"."__drizzle_migrations" WHERE hash = '${runResponsibleUserRepairHash}'`,
         );
       } finally {
         await sql.end();

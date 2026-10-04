@@ -665,6 +665,10 @@ export async function runDatabaseBackup(opts: RunDatabaseBackupOptions): Promise
     `;
     if (extensions.length > 0) {
       emit("-- Extensions");
+      for (const extensionSchema of new Set(extensions.map((extension) => extension.schema_name))) {
+        if (extensionSchema === "public") continue; // dmstfy-schema-patch: the restore target may lack this schema
+        emitStatement(`CREATE SCHEMA IF NOT EXISTS ${quoteIdentifier(extensionSchema)};`);
+      }
       for (const extension of extensions) {
         emitStatement(
           `CREATE EXTENSION IF NOT EXISTS ${quoteIdentifier(extension.extension_name)} WITH SCHEMA ${quoteIdentifier(extension.schema_name)};`,

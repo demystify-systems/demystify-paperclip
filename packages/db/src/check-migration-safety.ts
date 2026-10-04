@@ -97,8 +97,8 @@ const RESERVED_ALIAS_WORDS = new Set([
 function normalizeIdentifier(value: string): string {
   return value
     .trim()
-    .replace(/^"public"\s*\.\s*/i, "")
-    .replace(/^public\s*\.\s*/i, "")
+    .replace(/^"paperclip"\s*\.\s*/i, "")
+    .replace(/^paperclip\s*\.\s*/i, "")
     .replace(/^"/, "")
     .replace(/"$/, "")
     .replaceAll('""', '"');
@@ -639,7 +639,7 @@ function parseCreateIndexes(statement: string): CreateIndexInfo[] {
   const indexes: CreateIndexInfo[] = [];
   const sql = stripSqlComments(statement);
   const pattern =
-    /\bCREATE\s+(?:UNIQUE\s+)?INDEX\s+(CONCURRENTLY\s+)?(?:IF\s+NOT\s+EXISTS\s+)?(?:"[^"]+"|[A-Za-z_][A-Za-z0-9_]*)\s+ON\s+(?:(?:"public"|public)\s*\.\s*)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\s*(?:USING\s+[A-Za-z_][A-Za-z0-9_]*\s*)?\(([\s\S]*?)\)(?:\s+WHERE\s+([\s\S]*))?/gi;
+    /\bCREATE\s+(?:UNIQUE\s+)?INDEX\s+(CONCURRENTLY\s+)?(?:IF\s+NOT\s+EXISTS\s+)?(?:"[^"]+"|[A-Za-z_][A-Za-z0-9_]*)\s+ON\s+(?:(?:"paperclip"|paperclip)\s*\.\s*)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\s*(?:USING\s+[A-Za-z_][A-Za-z0-9_]*\s*)?\(([\s\S]*?)\)(?:\s+WHERE\s+([\s\S]*))?/gi;
 
   for (const match of sql.matchAll(pattern)) {
     const table = normalizeIdentifier(match[2] ?? match[3] ?? "");
@@ -662,9 +662,9 @@ function parseMutations(statement: string): MutationInfo[] {
   const mutations: MutationInfo[] = [];
   const sql = stripSqlComments(statement);
   const updatePattern =
-    /\bUPDATE\s+(?:ONLY\s+)?(?:(?:"public"|public)\s*\.\s*)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))(?:\s+(?:AS\s+)?(?:"?([A-Za-z_][A-Za-z0-9_]*)"?))?/gi;
+    /\bUPDATE\s+(?:ONLY\s+)?(?:(?:"paperclip"|paperclip)\s*\.\s*)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))(?:\s+(?:AS\s+)?(?:"?([A-Za-z_][A-Za-z0-9_]*)"?))?/gi;
   const deletePattern =
-    /\bDELETE\s+FROM\s+(?:ONLY\s+)?(?:(?:"public"|public)\s*\.\s*)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))(?:\s+(?:AS\s+)?(?:"?([A-Za-z_][A-Za-z0-9_]*)"?))?/gi;
+    /\bDELETE\s+FROM\s+(?:ONLY\s+)?(?:(?:"paperclip"|paperclip)\s*\.\s*)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))(?:\s+(?:AS\s+)?(?:"?([A-Za-z_][A-Za-z0-9_]*)"?))?/gi;
 
   for (const match of sql.matchAll(updatePattern)) {
     const table = normalizeIdentifier(match[1] ?? match[2] ?? "");
@@ -755,7 +755,7 @@ function hasSelectiveWhere(mutation: MutationInfo): boolean {
     // Resolve unquoted aliases from UPDATE/FROM/JOIN clauses to their real table names.
     const aliasMap = new Map<string, string>();
     const aliasPattern =
-      /\b(?:UPDATE|FROM|JOIN)\s+(?:"public"\s*\.\s*)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\s+(?:AS\s+)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\b/gi;
+      /\b(?:UPDATE|FROM|JOIN)\s+(?:"paperclip"\s*\.\s*)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\s+(?:AS\s+)?(?:"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\b/gi;
     for (const m of stripSqlComments(mutation.statementSql).matchAll(aliasPattern)) {
       const tbl = normalizeIdentifier(m[1] ?? m[2] ?? "");
       const alias = normalizeIdentifier(m[3] ?? m[4] ?? "");

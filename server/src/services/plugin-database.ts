@@ -154,16 +154,28 @@ function extractQualifiedRefs(statement: string): SqlRef[] {
   return refs;
 }
 
+const PAPERCLIP_CORE_SCHEMA = "paperclip"; // dmstfy-schema-patch
+
+function isCoreSchema(schema: string): boolean {
+  return schema === "public" || schema === PAPERCLIP_CORE_SCHEMA;
+}
+
+// Plugins keep writing public.<core table>; the core tables live in the Paperclip schema, so the validated
+// statement is pointed there just before it runs.
+function toCoreSchemaSql(statement: string): string {
+  return statement.replace(/(?<![\w."])(?:"public"|public)\s*\.\s*(?=[a-z_"])/gi, `"${PAPERCLIP_CORE_SCHEMA}".`);
+}
+
 function assertAllowedPublicRead(
   ref: SqlRef,
   allowedCoreReadTables: ReadonlySet<string>,
 ): void {
-  if (ref.schema !== "public") return;
+  if (!isCoreSchema(ref.schema)) return;
   if (!allowedCoreReadTables.has(ref.table)) {
-    throw new Error(`Plugin SQL references public.${ref.table}, which is not whitelisted`);
+    throw new Error(`Plugin SQL references ${ref.schema}.${ref.table}, which is not whitelisted`);
   }
   if (!["from", "join", "references"].includes(ref.keyword)) {
-    throw new Error(`Plugin SQL cannot mutate or define objects in public.${ref.table}`);
+    throw new Error(`Plugin SQL cannot mutate or define objects in ${ref.schema}.${ref.table}`);
   }
 }
 
@@ -235,7 +247,7 @@ export function validatePluginMigrationStatement(
   const allowedCoreReadTables = new Set(coreReadTables);
   for (const ref of refs) {
     if (ref.schema === namespace) continue;
-    if (ref.schema === "public") {
+    if (isCoreSchema(ref.schema)) {
       assertAllowedPublicRead(ref, allowedCoreReadTables);
       continue;
     }
@@ -265,7 +277,7 @@ export function validatePluginRuntimeQuery(
   const allowedCoreReadTables = new Set(coreReadTables);
   for (const ref of extractQualifiedRefs(statement)) {
     if (ref.schema === namespace) continue;
-    if (ref.schema === "public") {
+    if (isCoreSchema(ref.schema)) {
       assertAllowedPublicRead(ref, allowedCoreReadTables);
       continue;
     }
@@ -302,6 +314,7 @@ export function validatePluginRuntimeExecute(query: string, namespace: string): 
 
 function bindSql(statement: string, params: readonly unknown[] = []): SQL {
   // Safe only after callers run the plugin SQL validators above.
+  statement = toCoreSchemaSql(statement);
   if (params.length === 0) return sql.raw(statement);
   const chunks: SQL[] = [];
   let cursor = 0;
@@ -501,7 +514,7 @@ export function pluginDatabaseService(db: PluginDatabaseRootClient) {
             }
             for (const statement of statements) {
               validatePluginMigrationStatement(statement, namespace.namespaceName, coreReadTables);
-              await client.execute(sql.raw(statement));
+              await client.execute(sql.raw(toCoreSchemaSql(statement)));
             }
             await client
               .insert(pluginMigrations)
