@@ -29,7 +29,7 @@ describeEmbeddedPostgres("nested skill folders migration", () => {
     const sql = postgres(database.connectionString, { max: 1 });
     cleanups.push(async () => sql.end());
 
-    await sql`DELETE FROM "drizzle"."__drizzle_migrations" WHERE "hash" = ${await migrationHash()}`;
+    await sql`DELETE FROM "paperclip"."__drizzle_migrations" WHERE "hash" = ${await migrationHash()}`;
     await sql`DROP INDEX IF EXISTS "folders_company_kind_parent_position_idx"`;
     await sql`DROP INDEX IF EXISTS "folders_company_kind_system_key_uq"`;
     await sql`DROP INDEX IF EXISTS "folders_company_kind_root_slug_uq"`;

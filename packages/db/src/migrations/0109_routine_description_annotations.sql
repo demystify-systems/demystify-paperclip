@@ -12,7 +12,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'routine_documents_company_id_companies_id_fk'
 	) THEN
-		ALTER TABLE "routine_documents" ADD CONSTRAINT "routine_documents_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE no action ON UPDATE no action;
+		ALTER TABLE "routine_documents" ADD CONSTRAINT "routine_documents_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE no action ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
@@ -20,7 +20,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'routine_documents_routine_id_routines_id_fk'
 	) THEN
-		ALTER TABLE "routine_documents" ADD CONSTRAINT "routine_documents_routine_id_routines_id_fk" FOREIGN KEY ("routine_id") REFERENCES "public"."routines"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "routine_documents" ADD CONSTRAINT "routine_documents_routine_id_routines_id_fk" FOREIGN KEY ("routine_id") REFERENCES "paperclip"."routines"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
@@ -28,7 +28,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'routine_documents_document_id_documents_id_fk'
 	) THEN
-		ALTER TABLE "routine_documents" ADD CONSTRAINT "routine_documents_document_id_documents_id_fk" FOREIGN KEY ("document_id") REFERENCES "public"."documents"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "routine_documents" ADD CONSTRAINT "routine_documents_document_id_documents_id_fk" FOREIGN KEY ("document_id") REFERENCES "paperclip"."documents"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
@@ -50,7 +50,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'document_annotation_threads_routine_id_routines_id_fk'
 	) THEN
-		ALTER TABLE "document_annotation_threads" ADD CONSTRAINT "document_annotation_threads_routine_id_routines_id_fk" FOREIGN KEY ("routine_id") REFERENCES "public"."routines"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "document_annotation_threads" ADD CONSTRAINT "document_annotation_threads_routine_id_routines_id_fk" FOREIGN KEY ("routine_id") REFERENCES "paperclip"."routines"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
@@ -58,7 +58,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'document_annotation_comments_routine_id_routines_id_fk'
 	) THEN
-		ALTER TABLE "document_annotation_comments" ADD CONSTRAINT "document_annotation_comments_routine_id_routines_id_fk" FOREIGN KEY ("routine_id") REFERENCES "public"."routines"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "document_annotation_comments" ADD CONSTRAINT "document_annotation_comments_routine_id_routines_id_fk" FOREIGN KEY ("routine_id") REFERENCES "paperclip"."routines"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint

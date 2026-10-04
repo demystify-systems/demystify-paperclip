@@ -18,10 +18,10 @@ CREATE TABLE IF NOT EXISTS "tool_stdio_command_templates" (
 --> statement-breakpoint
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_stdio_command_templates_company_id_companies_id_fk') THEN
-    ALTER TABLE "tool_stdio_command_templates" ADD CONSTRAINT "tool_stdio_command_templates_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+    ALTER TABLE "tool_stdio_command_templates" ADD CONSTRAINT "tool_stdio_command_templates_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_stdio_command_templates_created_by_agent_id_agents_id_fk') THEN
-    ALTER TABLE "tool_stdio_command_templates" ADD CONSTRAINT "tool_stdio_command_templates_created_by_agent_id_agents_id_fk" FOREIGN KEY ("created_by_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_stdio_command_templates" ADD CONSTRAINT "tool_stdio_command_templates_created_by_agent_id_agents_id_fk" FOREIGN KEY ("created_by_agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE set null ON UPDATE no action;
   END IF;
 END $$;
 --> statement-breakpoint

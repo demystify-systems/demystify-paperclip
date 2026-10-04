@@ -16,7 +16,7 @@ DO $$ BEGIN
   ) THEN
     ALTER TABLE "tool_runtime_metric_counters"
       ADD CONSTRAINT "tool_runtime_metric_counters_company_id_companies_id_fk"
-      FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+      FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
   END IF;
 END $$;
 

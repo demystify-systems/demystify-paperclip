@@ -108,7 +108,7 @@ BEGIN
   ) THEN
     ALTER TABLE "plugin_config"
       ADD CONSTRAINT "plugin_config_company_id_companies_id_fk"
-      FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id")
+      FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id")
       ON DELETE cascade ON UPDATE no action;
   END IF;
 END $$;--> statement-breakpoint

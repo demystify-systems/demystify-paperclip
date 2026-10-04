@@ -71,49 +71,49 @@ ALTER TABLE "routine_runs" ADD COLUMN IF NOT EXISTS "responsible_user_id" text;
 --> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_secret_definitions_company_id_companies_id_fk') THEN
-		ALTER TABLE "user_secret_definitions" ADD CONSTRAINT "user_secret_definitions_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "user_secret_definitions" ADD CONSTRAINT "user_secret_definitions_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_secret_definitions_provider_config_id_company_secret_provider_configs_id_fk') THEN
-		ALTER TABLE "user_secret_definitions" ADD CONSTRAINT "user_secret_definitions_provider_config_id_company_secret_provider_configs_id_fk" FOREIGN KEY ("provider_config_id") REFERENCES "public"."company_secret_provider_configs"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "user_secret_definitions" ADD CONSTRAINT "user_secret_definitions_provider_config_id_company_secret_provider_configs_id_fk" FOREIGN KEY ("provider_config_id") REFERENCES "paperclip"."company_secret_provider_configs"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_secret_definitions_created_by_agent_id_agents_id_fk') THEN
-		ALTER TABLE "user_secret_definitions" ADD CONSTRAINT "user_secret_definitions_created_by_agent_id_agents_id_fk" FOREIGN KEY ("created_by_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "user_secret_definitions" ADD CONSTRAINT "user_secret_definitions_created_by_agent_id_agents_id_fk" FOREIGN KEY ("created_by_agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_secret_definitions_updated_by_agent_id_agents_id_fk') THEN
-		ALTER TABLE "user_secret_definitions" ADD CONSTRAINT "user_secret_definitions_updated_by_agent_id_agents_id_fk" FOREIGN KEY ("updated_by_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "user_secret_definitions" ADD CONSTRAINT "user_secret_definitions_updated_by_agent_id_agents_id_fk" FOREIGN KEY ("updated_by_agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_secret_declarations_company_id_companies_id_fk') THEN
-		ALTER TABLE "user_secret_declarations" ADD CONSTRAINT "user_secret_declarations_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "user_secret_declarations" ADD CONSTRAINT "user_secret_declarations_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_secret_declarations_user_secret_definition_id_user_secret_definitions_id_fk') THEN
-		ALTER TABLE "user_secret_declarations" ADD CONSTRAINT "user_secret_declarations_user_secret_definition_id_user_secret_definitions_id_fk" FOREIGN KEY ("user_secret_definition_id") REFERENCES "public"."user_secret_definitions"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "user_secret_declarations" ADD CONSTRAINT "user_secret_declarations_user_secret_definition_id_user_secret_definitions_id_fk" FOREIGN KEY ("user_secret_definition_id") REFERENCES "paperclip"."user_secret_definitions"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'company_secrets_user_secret_definition_id_user_secret_definitions_id_fk') THEN
-		ALTER TABLE "company_secrets" ADD CONSTRAINT "company_secrets_user_secret_definition_id_user_secret_definitions_id_fk" FOREIGN KEY ("user_secret_definition_id") REFERENCES "public"."user_secret_definitions"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "company_secrets" ADD CONSTRAINT "company_secrets_user_secret_definition_id_user_secret_definitions_id_fk" FOREIGN KEY ("user_secret_definition_id") REFERENCES "paperclip"."user_secret_definitions"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'secret_access_events_user_secret_definition_id_user_secret_definitions_id_fk') THEN
-		ALTER TABLE "secret_access_events" ADD CONSTRAINT "secret_access_events_user_secret_definition_id_user_secret_definitions_id_fk" FOREIGN KEY ("user_secret_definition_id") REFERENCES "public"."user_secret_definitions"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "secret_access_events" ADD CONSTRAINT "secret_access_events_user_secret_definition_id_user_secret_definitions_id_fk" FOREIGN KEY ("user_secret_definition_id") REFERENCES "paperclip"."user_secret_definitions"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;
 --> statement-breakpoint

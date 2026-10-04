@@ -15,19 +15,19 @@ CREATE TABLE IF NOT EXISTS "tool_gateway_sessions" (
 
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_gateway_sessions_company_id_companies_id_fk') THEN
-    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_gateway_sessions_agent_id_agents_id_fk') THEN
-    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_agent_id_agents_id_fk" FOREIGN KEY ("agent_id") REFERENCES "public"."agents"("id") ON DELETE cascade ON UPDATE no action;
+    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_agent_id_agents_id_fk" FOREIGN KEY ("agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE cascade ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_gateway_sessions_run_id_heartbeat_runs_id_fk') THEN
-    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_run_id_heartbeat_runs_id_fk" FOREIGN KEY ("run_id") REFERENCES "public"."heartbeat_runs"("id") ON DELETE cascade ON UPDATE no action;
+    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_run_id_heartbeat_runs_id_fk" FOREIGN KEY ("run_id") REFERENCES "paperclip"."heartbeat_runs"("id") ON DELETE cascade ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_gateway_sessions_issue_id_issues_id_fk') THEN
-    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_issue_id_issues_id_fk" FOREIGN KEY ("issue_id") REFERENCES "public"."issues"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_issue_id_issues_id_fk" FOREIGN KEY ("issue_id") REFERENCES "paperclip"."issues"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_gateway_sessions_project_id_projects_id_fk') THEN
-    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_project_id_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."projects"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_project_id_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "paperclip"."projects"("id") ON DELETE set null ON UPDATE no action;
   END IF;
 END $$;--> statement-breakpoint
 

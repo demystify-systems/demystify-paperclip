@@ -132,34 +132,34 @@ ALTER TABLE "tool_access_audit_events" ADD COLUMN IF NOT EXISTS "correlation_id"
 --> statement-breakpoint
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_mcp_gateways_approval_issue_id_issues_id_fk') THEN
-    ALTER TABLE "tool_mcp_gateways" ADD CONSTRAINT "tool_mcp_gateways_approval_issue_id_issues_id_fk" FOREIGN KEY ("approval_issue_id") REFERENCES "public"."issues"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_mcp_gateways" ADD CONSTRAINT "tool_mcp_gateways_approval_issue_id_issues_id_fk" FOREIGN KEY ("approval_issue_id") REFERENCES "paperclip"."issues"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_mcp_gateway_tokens_expiry_override_by_agent_id_agents_id_fk') THEN
-    ALTER TABLE "tool_mcp_gateway_tokens" ADD CONSTRAINT "tool_mcp_gateway_tokens_expiry_override_by_agent_id_agents_id_fk" FOREIGN KEY ("expiry_override_by_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_mcp_gateway_tokens" ADD CONSTRAINT "tool_mcp_gateway_tokens_expiry_override_by_agent_id_agents_id_fk" FOREIGN KEY ("expiry_override_by_agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_gateway_sessions_gateway_id_tool_mcp_gateways_id_fk') THEN
-    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_gateway_id_tool_mcp_gateways_id_fk" FOREIGN KEY ("gateway_id") REFERENCES "public"."tool_mcp_gateways"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_gateway_id_tool_mcp_gateways_id_fk" FOREIGN KEY ("gateway_id") REFERENCES "paperclip"."tool_mcp_gateways"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_gateway_sessions_gateway_token_id_tool_mcp_gateway_tokens_id_fk') THEN
-    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_gateway_token_id_tool_mcp_gateway_tokens_id_fk" FOREIGN KEY ("gateway_token_id") REFERENCES "public"."tool_mcp_gateway_tokens"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_gateway_sessions" ADD CONSTRAINT "tool_gateway_sessions_gateway_token_id_tool_mcp_gateway_tokens_id_fk" FOREIGN KEY ("gateway_token_id") REFERENCES "paperclip"."tool_mcp_gateway_tokens"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_invocations_gateway_id_tool_mcp_gateways_id_fk') THEN
-    ALTER TABLE "tool_invocations" ADD CONSTRAINT "tool_invocations_gateway_id_tool_mcp_gateways_id_fk" FOREIGN KEY ("gateway_id") REFERENCES "public"."tool_mcp_gateways"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_invocations" ADD CONSTRAINT "tool_invocations_gateway_id_tool_mcp_gateways_id_fk" FOREIGN KEY ("gateway_id") REFERENCES "paperclip"."tool_mcp_gateways"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_invocations_gateway_token_id_tool_mcp_gateway_tokens_id_fk') THEN
-    ALTER TABLE "tool_invocations" ADD CONSTRAINT "tool_invocations_gateway_token_id_tool_mcp_gateway_tokens_id_fk" FOREIGN KEY ("gateway_token_id") REFERENCES "public"."tool_mcp_gateway_tokens"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_invocations" ADD CONSTRAINT "tool_invocations_gateway_token_id_tool_mcp_gateway_tokens_id_fk" FOREIGN KEY ("gateway_token_id") REFERENCES "paperclip"."tool_mcp_gateway_tokens"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_call_events_gateway_id_tool_mcp_gateways_id_fk') THEN
-    ALTER TABLE "tool_call_events" ADD CONSTRAINT "tool_call_events_gateway_id_tool_mcp_gateways_id_fk" FOREIGN KEY ("gateway_id") REFERENCES "public"."tool_mcp_gateways"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_call_events" ADD CONSTRAINT "tool_call_events_gateway_id_tool_mcp_gateways_id_fk" FOREIGN KEY ("gateway_id") REFERENCES "paperclip"."tool_mcp_gateways"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_call_events_gateway_token_id_tool_mcp_gateway_tokens_id_fk') THEN
-    ALTER TABLE "tool_call_events" ADD CONSTRAINT "tool_call_events_gateway_token_id_tool_mcp_gateway_tokens_id_fk" FOREIGN KEY ("gateway_token_id") REFERENCES "public"."tool_mcp_gateway_tokens"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_call_events" ADD CONSTRAINT "tool_call_events_gateway_token_id_tool_mcp_gateway_tokens_id_fk" FOREIGN KEY ("gateway_token_id") REFERENCES "paperclip"."tool_mcp_gateway_tokens"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_access_audit_events_gateway_id_tool_mcp_gateways_id_fk') THEN
-    ALTER TABLE "tool_access_audit_events" ADD CONSTRAINT "tool_access_audit_events_gateway_id_tool_mcp_gateways_id_fk" FOREIGN KEY ("gateway_id") REFERENCES "public"."tool_mcp_gateways"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_access_audit_events" ADD CONSTRAINT "tool_access_audit_events_gateway_id_tool_mcp_gateways_id_fk" FOREIGN KEY ("gateway_id") REFERENCES "paperclip"."tool_mcp_gateways"("id") ON DELETE set null ON UPDATE no action;
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_access_audit_events_gateway_token_id_tool_mcp_gateway_tokens_id_fk') THEN
-    ALTER TABLE "tool_access_audit_events" ADD CONSTRAINT "tool_access_audit_events_gateway_token_id_tool_mcp_gateway_tokens_id_fk" FOREIGN KEY ("gateway_token_id") REFERENCES "public"."tool_mcp_gateway_tokens"("id") ON DELETE set null ON UPDATE no action;
+    ALTER TABLE "tool_access_audit_events" ADD CONSTRAINT "tool_access_audit_events_gateway_token_id_tool_mcp_gateway_tokens_id_fk" FOREIGN KEY ("gateway_token_id") REFERENCES "paperclip"."tool_mcp_gateway_tokens"("id") ON DELETE set null ON UPDATE no action;
   END IF;
 END $$;
 --> statement-breakpoint

@@ -36,7 +36,7 @@ async function makeDerivedAttributionMigrationPending(
 ): Promise<void> {
   const hash = await migrationHash(DERIVED_ATTRIBUTION_MIGRATION);
   await sql`
-    DELETE FROM "drizzle"."__drizzle_migrations"
+    DELETE FROM "paperclip"."__drizzle_migrations"
     WHERE "hash" = ${hash}
   `;
 }
@@ -79,7 +79,7 @@ async function expectDerivedAttributionSchema(sql: ReturnType<typeof postgres>):
   const columns = await sql<{ column_name: string; data_type: string; is_nullable: string }[]>`
     SELECT "column_name", "data_type", "is_nullable"
     FROM "information_schema"."columns"
-    WHERE "table_schema" = 'public'
+    WHERE "table_schema" = 'paperclip'
       AND "table_name" = 'issue_comments'
       AND "column_name" IN (
         'derived_author_agent_id',
@@ -100,7 +100,7 @@ async function expectDerivedAttributionSchema(sql: ReturnType<typeof postgres>):
     JOIN "information_schema"."referential_constraints" rc
       ON rc."constraint_schema" = tc."constraint_schema"
      AND rc."constraint_name" = tc."constraint_name"
-    WHERE tc."table_schema" = 'public'
+    WHERE tc."table_schema" = 'paperclip'
       AND tc."table_name" = 'issue_comments'
       AND tc."constraint_name" IN (
         'issue_comments_derived_author_agent_id_agents_id_fk',
@@ -150,7 +150,7 @@ describeEmbeddedPostgres("issue comment derived attribution migration", () => {
         const supportIndexes = await sql<{ indexname: string }[]>`
           SELECT "indexname"
           FROM "pg_indexes"
-          WHERE "schemaname" = 'public'
+          WHERE "schemaname" = 'paperclip'
             AND "indexname" = 'issue_comments_derived_attribution_backfill_idx'
         `;
         expect(supportIndexes).toEqual([]);

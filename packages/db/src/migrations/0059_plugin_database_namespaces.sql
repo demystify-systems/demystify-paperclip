@@ -25,12 +25,12 @@ CREATE TABLE IF NOT EXISTS "plugin_migrations" (
 --> statement-breakpoint
 DO $$ BEGIN
  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'plugin_database_namespaces_plugin_id_plugins_id_fk') THEN
-  ALTER TABLE "plugin_database_namespaces" ADD CONSTRAINT "plugin_database_namespaces_plugin_id_plugins_id_fk" FOREIGN KEY ("plugin_id") REFERENCES "public"."plugins"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "plugin_database_namespaces" ADD CONSTRAINT "plugin_database_namespaces_plugin_id_plugins_id_fk" FOREIGN KEY ("plugin_id") REFERENCES "paperclip"."plugins"("id") ON DELETE cascade ON UPDATE no action;
  END IF;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'plugin_migrations_plugin_id_plugins_id_fk') THEN
-  ALTER TABLE "plugin_migrations" ADD CONSTRAINT "plugin_migrations_plugin_id_plugins_id_fk" FOREIGN KEY ("plugin_id") REFERENCES "public"."plugins"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "plugin_migrations" ADD CONSTRAINT "plugin_migrations_plugin_id_plugins_id_fk" FOREIGN KEY ("plugin_id") REFERENCES "paperclip"."plugins"("id") ON DELETE cascade ON UPDATE no action;
  END IF;
 END $$;--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "plugin_database_namespaces_plugin_idx" ON "plugin_database_namespaces" USING btree ("plugin_id");--> statement-breakpoint

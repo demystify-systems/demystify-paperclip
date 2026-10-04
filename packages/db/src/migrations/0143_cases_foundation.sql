@@ -88,115 +88,115 @@ CREATE TABLE IF NOT EXISTS "case_attachments" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "cases" ADD CONSTRAINT "cases_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "cases" ADD CONSTRAINT "cases_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "cases" ADD CONSTRAINT "cases_project_id_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "public"."projects"("id") ON DELETE set null ON UPDATE no action;
+	ALTER TABLE "cases" ADD CONSTRAINT "cases_project_id_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "paperclip"."projects"("id") ON DELETE set null ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "cases" ADD CONSTRAINT "cases_parent_case_id_cases_id_fk" FOREIGN KEY ("parent_case_id") REFERENCES "public"."cases"("id") ON DELETE set null ON UPDATE no action;
+	ALTER TABLE "cases" ADD CONSTRAINT "cases_parent_case_id_cases_id_fk" FOREIGN KEY ("parent_case_id") REFERENCES "paperclip"."cases"("id") ON DELETE set null ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "cases" ADD CONSTRAINT "cases_created_by_agent_id_agents_id_fk" FOREIGN KEY ("created_by_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
+	ALTER TABLE "cases" ADD CONSTRAINT "cases_created_by_agent_id_agents_id_fk" FOREIGN KEY ("created_by_agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE set null ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_issue_links" ADD CONSTRAINT "case_issue_links_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_issue_links" ADD CONSTRAINT "case_issue_links_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_issue_links" ADD CONSTRAINT "case_issue_links_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "public"."cases"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_issue_links" ADD CONSTRAINT "case_issue_links_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "paperclip"."cases"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_issue_links" ADD CONSTRAINT "case_issue_links_issue_id_issues_id_fk" FOREIGN KEY ("issue_id") REFERENCES "public"."issues"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_issue_links" ADD CONSTRAINT "case_issue_links_issue_id_issues_id_fk" FOREIGN KEY ("issue_id") REFERENCES "paperclip"."issues"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_events" ADD CONSTRAINT "case_events_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_events" ADD CONSTRAINT "case_events_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_events" ADD CONSTRAINT "case_events_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "public"."cases"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_events" ADD CONSTRAINT "case_events_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "paperclip"."cases"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_events" ADD CONSTRAINT "case_events_actor_agent_id_agents_id_fk" FOREIGN KEY ("actor_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
+	ALTER TABLE "case_events" ADD CONSTRAINT "case_events_actor_agent_id_agents_id_fk" FOREIGN KEY ("actor_agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE set null ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_documents" ADD CONSTRAINT "case_documents_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_documents" ADD CONSTRAINT "case_documents_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_documents" ADD CONSTRAINT "case_documents_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "public"."cases"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_documents" ADD CONSTRAINT "case_documents_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "paperclip"."cases"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_documents" ADD CONSTRAINT "case_documents_document_id_documents_id_fk" FOREIGN KEY ("document_id") REFERENCES "public"."documents"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_documents" ADD CONSTRAINT "case_documents_document_id_documents_id_fk" FOREIGN KEY ("document_id") REFERENCES "paperclip"."documents"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_labels" ADD CONSTRAINT "case_labels_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_labels" ADD CONSTRAINT "case_labels_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_labels" ADD CONSTRAINT "case_labels_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "public"."cases"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_labels" ADD CONSTRAINT "case_labels_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "paperclip"."cases"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_labels" ADD CONSTRAINT "case_labels_label_id_labels_id_fk" FOREIGN KEY ("label_id") REFERENCES "public"."labels"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_labels" ADD CONSTRAINT "case_labels_label_id_labels_id_fk" FOREIGN KEY ("label_id") REFERENCES "paperclip"."labels"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_attachments" ADD CONSTRAINT "case_attachments_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_attachments" ADD CONSTRAINT "case_attachments_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_attachments" ADD CONSTRAINT "case_attachments_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "public"."cases"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_attachments" ADD CONSTRAINT "case_attachments_case_id_cases_id_fk" FOREIGN KEY ("case_id") REFERENCES "paperclip"."cases"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
-	ALTER TABLE "case_attachments" ADD CONSTRAINT "case_attachments_asset_id_assets_id_fk" FOREIGN KEY ("asset_id") REFERENCES "public"."assets"("id") ON DELETE cascade ON UPDATE no action;
+	ALTER TABLE "case_attachments" ADD CONSTRAINT "case_attachments_asset_id_assets_id_fk" FOREIGN KEY ("asset_id") REFERENCES "paperclip"."assets"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
 	WHEN duplicate_object THEN NULL;
 END $$;

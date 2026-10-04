@@ -38,7 +38,7 @@ DO $$ BEGIN
     SELECT 1 FROM "pg_constraint" WHERE "conname" = 'folders_parent_id_folders_id_fk'
   ) THEN
     ALTER TABLE "folders" ADD CONSTRAINT "folders_parent_id_folders_id_fk"
-      FOREIGN KEY ("parent_id") REFERENCES "public"."folders"("id") ON DELETE restrict ON UPDATE no action;
+      FOREIGN KEY ("parent_id") REFERENCES "paperclip"."folders"("id") ON DELETE restrict ON UPDATE no action;
   END IF;
 END $$;
 --> statement-breakpoint

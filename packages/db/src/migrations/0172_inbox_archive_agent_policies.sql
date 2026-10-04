@@ -5,14 +5,14 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'issue_inbox_archives_archived_by_agent_id_agents_id_fk'
 	) THEN
-		ALTER TABLE "issue_inbox_archives" ADD CONSTRAINT "issue_inbox_archives_archived_by_agent_id_agents_id_fk" FOREIGN KEY ("archived_by_agent_id") REFERENCES "public"."agents"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "issue_inbox_archives" ADD CONSTRAINT "issue_inbox_archives_archived_by_agent_id_agents_id_fk" FOREIGN KEY ("archived_by_agent_id") REFERENCES "paperclip"."agents"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'issue_inbox_archives_archived_by_run_id_heartbeat_runs_id_fk'
 	) THEN
-		ALTER TABLE "issue_inbox_archives" ADD CONSTRAINT "issue_inbox_archives_archived_by_run_id_heartbeat_runs_id_fk" FOREIGN KEY ("archived_by_run_id") REFERENCES "public"."heartbeat_runs"("id") ON DELETE set null ON UPDATE no action;
+		ALTER TABLE "issue_inbox_archives" ADD CONSTRAINT "issue_inbox_archives_archived_by_run_id_heartbeat_runs_id_fk" FOREIGN KEY ("archived_by_run_id") REFERENCES "paperclip"."heartbeat_runs"("id") ON DELETE set null ON UPDATE no action;
 	END IF;
 END $$;--> statement-breakpoint
 DO $$ BEGIN
@@ -36,7 +36,7 @@ DO $$ BEGIN
 	IF NOT EXISTS (
 		SELECT 1 FROM "pg_constraint" WHERE "conname" = 'user_inbox_agent_policies_company_id_companies_id_fk'
 	) THEN
-		ALTER TABLE "user_inbox_agent_policies" ADD CONSTRAINT "user_inbox_agent_policies_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."companies"("id") ON DELETE cascade ON UPDATE no action;
+		ALTER TABLE "user_inbox_agent_policies" ADD CONSTRAINT "user_inbox_agent_policies_company_id_companies_id_fk" FOREIGN KEY ("company_id") REFERENCES "paperclip"."companies"("id") ON DELETE cascade ON UPDATE no action;
 	END IF;
 END $$;--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "user_inbox_agent_policies_company_user_uq" ON "user_inbox_agent_policies" USING btree ("company_id", "user_id");
