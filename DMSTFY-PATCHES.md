@@ -54,7 +54,18 @@ The plugin SQL rewrite is textual: a string literal in plugin SQL that contains 
 Existing installs with tables in `public` are not moved; the patched client starts a fresh `paperclip` schema.
 Tests elsewhere in the repo that inspect `public` directly are not updated.
 
-### Release branch (v2026.707.0)
+### Release source (v2026.707.0)
 
-`release/2026.707.0-dmstfy` is tag `v2026.707.0` plus this patch (the tag the pod runs today), for an image that changes
-nothing but the schema. The patch there is the same script; run it on the tag, not on a patched tree.
+Branch `dmstfy/v2026.707.0-schema` is tag `v2026.707.0` (the version the pod runs today) plus this patch, for an image
+that changes nothing but the schema. It is built directly from that branch; it is not merged anywhere. The patch there is
+the same script; run it on the tag, not on a patched tree.
+
+Evidence (run locally on the dev box, Postgres 16, commit 540d4716):
+
+- `dmstfy-schema-patch.mjs --check` and `--selftest` ok
+- Paperclip's own migrator as the unprivileged role: 134 of 134 migrations applied, 115 tables in `paperclip`, 0 elsewhere
+- `@paperclipai/db` vitest: 74 passed (11 files); the backup-lib restore tests pass
+- `@paperclipai/server` plugin-database test: 17 passed
+- `@paperclipai/server` full suite: 3190 passed, 27 failed, 1 skipped. The 27 are `workspace-runtime.test.ts` (git push and commit in
+  temp repos fail in the box git environment) and `paperclip-skill-utils.test.ts` (skill files missing under `server/`). Neither
+  touches the database or schema; not run on the unpatched tag, so "not schema related" is a reading, not a measurement.
