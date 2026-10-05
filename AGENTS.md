@@ -224,3 +224,7 @@ PR #2218 (`feat/external-adapter-phase1`) adds external adapter support. See roo
 ## Design system
 
 `DESIGN.md` at the repo root is the source of truth for UI design decisions. The token-only rule applies to all `ui/` changes: every color, spacing, radius, type, shadow, and motion value in `ui/src/components/**` and `ui/src/pages/**` comes from the token layer in `ui/src/index.css` — no hex, raw px, arbitrary Tailwind bracket values, or raw `font-size`/`fontSize` declarations in components, outside the documented allowlist in `ui/src/index.css`. Run `pnpm check:token-gates` (`scripts/check-token-gates.mjs`) before committing UI changes — it fails on any violation not covered by that allowlist.
+
+## Where work runs (owner rule, 2026-10-05)
+
+The owner's Mac is a control seat and must never slow down. Substantial work (whole-app builds, type-checks or test suites, Playwright or e2e, installs, docker, data loads, multi-agent fan-outs, anything over about 10 minutes or 2 GB of RAM) runs on the Demystify CI/CD dev boxes (hz-dev-01/02/03) as a fleet lane: `fleet sessions start --repo <repo> --lane <programme>-<story> --account <seat>`, one lane per story, in /loop mode. A lane finishes its task end to end: build, test, commit, push, PR into develop, merge when green, update its status file or board, report its lane id. A Mac or web session plans, reviews, makes small edits and dispatches lanes; it does not run heavy work locally and leaves nothing running when it is done.
