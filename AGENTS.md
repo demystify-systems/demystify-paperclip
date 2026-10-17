@@ -1,3 +1,14 @@
+<!-- Demystify lanes: added for Codex and agy (art:brief-engine-parity-1017). The upstream guidance follows below, unchanged. -->
+## Demystify lanes (every engine)
+
+Read [CLAUDE.md](CLAUDE.md) too and follow it: it holds this fork's standing rules for every engine (Claude, Codex, Antigravity); Codex and agy do not load it for you.
+
+- On a Demystify dev box you are a fleet lane: run `lane-context` at the start and read all of it, report with `lane` (plan, doing, done, blocked) and keep your status file's STATE line current.
+- This fork has no qa branch: your own branch from `origin/develop`, `gh pr create --base develop`. Never open a PR into master or merge into master; that is the owner's release.
+- Tests first, run on the box through `heavy`. Never start, re-run or schedule a GitHub workflow (demystify-ci-cd `docs/dev-box/CI-MINIMAL.md`).
+- Never read, print or commit a secret, a token or a `.env` file. Migrations against a shared database, deploys and secrets are owner steps.
+- No em dash character in anything you write. Cite every claim: `art:<id>`, a PR link or `path:line`.
+
 # AGENTS.md
 
 Guidance for human and AI contributors working in this repository.
